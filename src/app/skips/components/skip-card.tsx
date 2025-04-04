@@ -12,7 +12,7 @@ interface SkipCardProps {
     onSelect: () => void;
 }
 
-export function SkipCard({ id, size, price, period, isSelected, onSelect }: SkipCardProps) {
+export function SkipCard({ size, price, period, isSelected, onSelect }: SkipCardProps) {
     return (
         <div
             className={cn(
