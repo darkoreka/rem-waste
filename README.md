@@ -18,7 +18,7 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 
 
 ## Deploy on Vercel
- Link to deployed version: 
+ Link to deployed version: https://rem-waste-git-main-rekas-projects-e094a4ee.vercel.app/
 
 ## 🧱 Architecture
 File Structure is based on feature folders (e.g. app/skips/components) that co-locate UI, logic, and API functionality.
