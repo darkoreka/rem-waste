@@ -10,9 +10,9 @@ const steps = [
     { id: 6, name: "Payment", icon: CreditCard },
 ];
 
-export function ProgressSteps({ currentStep }: { currentStep: number }) {
+export function ProgressBar({ currentStep }: { currentStep: number }) {
     return (
-        <div className="w-full">
+        <div className="w-full sticky top-0 z-40 bg-gray-950 border-b border-gray-800 p-4">
             <div className="hidden md:flex items-center justify-between">
                 {steps.map((step, index) => {
                     const StepIcon = step.icon;

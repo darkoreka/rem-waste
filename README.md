@@ -20,51 +20,65 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 ## Deploy on Vercel
  Link to deployed version: https://rem-waste-git-main-rekas-projects-e094a4ee.vercel.app/
 
+This project follows a modular, component-driven approach using the App Router introduced in Next.js 13+. All components are designed to be reusable, accessible, and responsive across screen sizes.
+
 ## 🧱 Architecture
-File Structure is based on feature folders (e.g. app/skips/components) that co-locate UI, logic, and API functionality.
+The app uses a feature-based folder structure (e.g. app/skips/components) to group logic, UI, and API behavior by domain.
 
-API Routes live under app/api/ and provide mock or real data for skips dynamically via fetch("/api/skips").
+Skip data is loaded from a dynamic API endpoint (/api/skips), which can be connected to mock or live data sources.
 
-Components are split by responsibility:
+Component structure is based on clear separation of concerns:
 
-SkipCard handles UI and selection
+SkipCard renders a single skip option and handles selection
 
-ProgressSteps manages visual progress state
+ProgressSteps shows the current progress and is fixed to the top
 
-StickyFooter provides contextual actions
+Footer displays context-based actions and is fixed to the bottom
 
-Uses forwardRef and useRef to manage interactions like “click outside to deselect,” allowing for global UX behavior that remains precise and maintainable.
+The code follows SOLID principles, keeping components small, composable, and easy to extend.
 
-## 🎨 Styling and Responsiveness
-Tailwind CSS is used for atomic, utility-first styling and rapid layout composition.
+Click-outside behavior is implemented using useRef and forwardRef to keep global interaction logic clean and isolated.
 
-All components are fully responsive using Tailwind’s responsive utilities like md:grid-cols-2, lg:grid-cols-3, gap-x-4, justify-center, etc.
+## 🎨 Styling & Responsiveness
+The UI is styled with Tailwind CSS. All layouts use utility-first classes and responsive breakpoints (md, lg, etc.).
 
-The layout adapts seamlessly to mobile using flex-col, text-center, gap-y, and breakpoint-specific overrides.
+Cards are displayed in a responsive grid (md:grid-cols-2, lg:grid-cols-3)
 
-StickyFooter adjusts layout across breakpoints, centering content and stacking buttons on smaller screens while aligning them horizontally on larger screens.
+Mobile layout uses vertical stacking with centered content
+
+Footer and progress components are sticky on mobile and desktop
+
+Gaps and padding adapt based on screen size (gap-4, px-6, pb-40)
 
 ## 🧩 Shadcn UI
-Leverages Shadcn UI components like Button, Badge, and custom-styled extensions for consistent design and accessibility.
+The design system uses Shadcn UI components for styling consistency and accessibility.
 
-Utility classes like disabled:opacity-50, cursor-not-allowed, and focus-visible:ring ensure proper accessibility out of the box.
+Common components used:
 
-Shadcn UI theming and variants (e.g. variant="secondary") help maintain design consistency.
+Button, with support for variants like secondary or outline
+
+Tooltip for hover messages
+
+Badge, when needed for labels
+
+Accessibility helpers like cursor-not-allowed, focus-visible:ring, and disabled:opacity-50 are applied through Tailwind and Shadcn utilities.
 
 ## ♿ Accessibility
-Buttons are keyboard accessible and use focus-visible outlines for accessibility.
+Buttons are keyboard accessible and include visible focus states
 
-Click handlers are scoped carefully (using stopPropagation and ref tracking) to ensure intuitive interactions without breaking assistive technology support.
+Interactive areas use stopPropagation and ref guards for clean behavior
 
-All icons are decorative or labeled when necessary.
+Icons are either decorative or wrapped in accessible components
 
-Responsive layout avoids overlapping or clipped text, maintaining legibility across screen sizes.
+Layout avoids overflow or truncation on smaller screens
 
 ## ⚡ Performance
-Uses client-side data fetching for simplicity, but can easily switch to SSR (getServerSideProps) or RSC for performance-critical pages.
+Data is fetched client-side with fetch() from a real endpoint
 
-Minimal re-renders by keeping selection state localized and avoiding unnecessary global state.
+State is kept local to avoid unnecessary global updates
 
-Image components use next/image with optimized sizes and lazy loading.
+Images use next/image with lazy loading and optimized sizes
 
-ref-based event handling avoids global event clutter and ensures only necessary updates occur.
+Only essential event listeners are active (e.g. for click-outside behavior)
+
+This setup ensures a responsive and user-friendly experience across both mobile and desktop, while keeping the codebase maintainable and scalable.

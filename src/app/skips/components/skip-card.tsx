@@ -2,6 +2,8 @@ import Image from "next/image";
 import { cn } from "@/lib/utils";
 import SelectSkipButton from "./skip-size-button";
 import { Badge } from "@/components/ui/badge";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/tooltip";
+import { AlertTriangle } from "lucide-react";
 
 interface SkipCardProps {
     id: string;
@@ -10,9 +12,10 @@ interface SkipCardProps {
     period: string;
     isSelected: boolean;
     onSelect: () => void;
+    tags?: string[];
 }
 
-export function SkipCard({ size, price, period, isSelected, onSelect }: SkipCardProps) {
+export function SkipCard({ size, price, period, isSelected, onSelect, tags }: SkipCardProps) {
     return (
         <div
             className={cn(
@@ -37,6 +40,27 @@ export function SkipCard({ size, price, period, isSelected, onSelect }: SkipCard
                 <Badge className="absolute top-3 right-3 text-white bg-blue-600">
                     {size}
                 </Badge>
+                {tags && tags.length > 0 && (
+                    <TooltipProvider>
+                        <Tooltip>
+                            <TooltipTrigger asChild>
+                                <div className="absolute bottom-3 left-3 text-yellow-400 hover:text-yellow-300 cursor-help">
+                                    <AlertTriangle className="h-6 w-6" />
+                                </div>
+                            </TooltipTrigger>
+                            <TooltipContent side="top" className="flex items-center gap-2 bg-black text-yellow-400 font-semibold px-3 py-1 rounded-md shadow-md border border-zinc-800">
+                                <div className="flex flex-col gap-2">
+                                    {tags.map((tag, index) => (
+                                        <div key={index} className="flex items-center gap-2">
+                                            <AlertTriangle className="h-4 w-4 shrink-0" />
+                                            <span>{tag}</span>
+                                        </div>
+                                    ))}
+                                </div>
+                            </TooltipContent>
+                        </Tooltip>
+                    </TooltipProvider>
+                )}
             </div>
 
             <div className="p-5">
@@ -53,6 +77,6 @@ export function SkipCard({ size, price, period, isSelected, onSelect }: SkipCard
 
                 <SelectSkipButton isSelected={isSelected} onSelect={onSelect} />
             </div>
-        </div>
+        </div >
     );
 }
