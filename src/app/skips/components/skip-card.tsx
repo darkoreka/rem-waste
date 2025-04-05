@@ -22,7 +22,7 @@ interface SkipCardLoadingProps {
 
 type SkipCardProps = SkipCardBaseProps | SkipCardLoadingProps;
 
-const IMAGE_PATH = process.env.IMAGE_PATH || "/images/default.jpg";
+const IMAGE_PATH = process.env.NEXT_PUBLIC_IMAGE_PATH || "/images/default.jpg";
 
 export function SkipCard(props: SkipCardProps) {
     if (props.isLoading) {
