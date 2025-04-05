@@ -1,6 +1,6 @@
 import { Skip } from "@/types/skip";
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
+const API_BASE_URL = process.env.API_BASE_URL;
 
 export async function fetchSkipsByLocation(postcode: string, area: string): Promise<Skip[]> {
     const response = await fetch(`${API_BASE_URL}/skips/by-location?postcode=${postcode}&area=${area}`);

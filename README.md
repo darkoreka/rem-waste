@@ -22,7 +22,7 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 
 This project follows a modular, component-driven approach using the App Router introduced in Next.js 13+. All components are designed to be reusable, accessible, and responsive across screen sizes.
 
-## 🧱 Architecture
+## Architecture
 The app uses a feature-based folder structure (e.g. app/skips/components) to group logic, UI, and API behavior by domain.
 
 - Separated the data acces layer, accesing with API
@@ -35,12 +35,12 @@ The app uses a feature-based folder structure (e.g. app/skips/components) to gro
 
     - Footer displays context-based actions and is fixed to the bottom
 
-- Custom hooks for cleaner code and for keeping the single responsability
+- Custom hooks for cleaner code and for keeping the single responsability principle
     - Click-outside custom hook behavior is implemented using useRef and forwardRef to keep global interaction logic clean and isolated.
 
 The code follows SOLID principles, keeping components small, composable, and easy to extend.
 
-## 🎨 Styling & Responsiveness
+## Styling & Responsiveness
 The UI is styled with Tailwind CSS. All layouts use utility-first classes and responsive breakpoints (md, lg, etc.).
 
 - Cards are displayed in a responsive grid (md:grid-cols-2, lg:grid-cols-3)
@@ -51,7 +51,7 @@ The UI is styled with Tailwind CSS. All layouts use utility-first classes and re
 
 - Gaps and padding adapt based on screen size (gap-4, px-6, pb-40)
 
-## 🧩 Shadcn UI
+## Shadcn UI
 The design system uses Shadcn UI components for styling consistency and accessibility.
 
 Common components used:
@@ -64,7 +64,7 @@ Common components used:
 
 Accessibility helpers like cursor-not-allowed, focus-visible:ring, and disabled:opacity-50 are applied through Tailwind and Shadcn utilities.
 
-## ♿ Accessibility
+## Accessibility
 - Buttons are keyboard accessible and include visible focus states
 
 - Interactive areas use stopPropagation and ref guards for clean behavior
@@ -73,7 +73,7 @@ Accessibility helpers like cursor-not-allowed, focus-visible:ring, and disabled:
 
 - Layout avoids overflow or truncation on smaller screens
 
-## ⚡ Performance
+## Performance
 - Data is fetched client-side with fetch() from a real endpoint
 
 - State is kept local to avoid unnecessary global updates
