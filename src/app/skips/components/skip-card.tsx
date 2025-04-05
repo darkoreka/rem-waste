@@ -37,12 +37,17 @@ export function SkipCard({ size, price, period, isSelected, onSelect, tags }: Sk
                     alt={`${size} Skip`}
                     className="w-full h-48 object-cover"
                 />
-                <Badge className="absolute top-3 right-3 text-white bg-blue-600">
+                <Badge
+                    variant="secondary"
+                    className={cn(
+                        "absolute top-3 right-3",
+                        isSelected && "bg-blue-600 text-white"
+                    )}
+                >
                     {size}
                 </Badge>
                 {tags && tags.length > 0 && (
                     <>
-                        {/* Desktop Tooltip */}
                         <div className="hidden md:block">
                             <TooltipProvider>
                                 <Tooltip>
@@ -66,7 +71,6 @@ export function SkipCard({ size, price, period, isSelected, onSelect, tags }: Sk
                             </TooltipProvider>
                         </div>
 
-                        {/* Mobile visible fallback */}
                         <div className="block md:hidden absolute bottom-3 left-3 text-yellow-400 text-sm font-medium space-y-1">
                             {tags.map((tag, index) => (
                                 <div key={index} className="flex items-center gap-2 bg-neutral-950 p-1 rounded-md">

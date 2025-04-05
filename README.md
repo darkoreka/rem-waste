@@ -82,3 +82,16 @@ Images use next/image with lazy loading and optimized sizes
 Only essential event listeners are active (e.g. for click-outside behavior)
 
 This setup ensures a responsive and user-friendly experience across both mobile and desktop, while keeping the codebase maintainable and scalable.
+
+## Changes made compared to the original page:
+- Added a sticky progress bar and improved responsive design, along with minor design adjustments
+
+- Moved the "Continue" bar to the footer
+
+- Made a small change to the selection data
+
+- Enabled card selection and deselection when clicking outside a card
+
+- Added a tooltip for the heavy machine alert in desktop view; displayed as a badge in mobile view
+
+- Changed the Yard badge color when a card is selected
