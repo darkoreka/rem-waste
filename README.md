@@ -25,99 +25,62 @@ This project follows a modular, component-driven approach using the App Router i
 ## 🧱 Architecture
 The app uses a feature-based folder structure (e.g. app/skips/components) to group logic, UI, and API behavior by domain.
 
-Key Features
-SkipCard Component:
+- Separated the data acces layer, accesing with API
 
-Renders a single skip option and handles selection.
-Supports a skeleton loading state for better user experience during data fetching.
-Dynamically updates styles based on selection state (e.g., border and shadow changes).
-ProgressSteps Component:
+- Component structure is based on clear separation of concerns:
 
-Displays the current progress and is fixed to the top of the page for better navigation.
-StickyFooter Component:
+    - SkipCard renders a single skip option and handles selection
 
-Displays context-based actions (e.g., selected skip size and price) and is fixed to the bottom of the page.
-TitleWithDescription Component:
+    - ProgressSteps shows the current progress and is fixed to the top
 
-Separates the title and description into a reusable component for better readability and maintainability.
-Used to display the page title ("Choose Your Skip Size") and a brief description.
-Custom Hook
-useClickOutside:
-A custom hook that detects clicks outside of specified elements.
-Used to deselect a skip card when the user clicks outside the card or footer.
-Keeps global interaction logic clean and isolated by leveraging useRef.
-TypeScript Types
-Skip Type:
+    - Footer displays context-based actions and is fixed to the bottom
 
-Defines the structure of a skip object fetched from the API.
-Ensures type safety and consistency across the app.
+- Custom hooks for cleaner code and for keeping the single responsability
+    - Click-outside custom hook behavior is implemented using useRef and forwardRef to keep global interaction logic clean and isolated.
 
 The code follows SOLID principles, keeping components small, composable, and easy to extend.
-
-API Integration
-Fetching Skip Data:
-
-Skip data is fetched from a dynamic API endpoint (/api/skips) using a dedicated function in the api folder.
-The fetchSkipsByLocation function handles the API call and filters out invalid data (e.g., skips with null prices).
 
 ## 🎨 Styling & Responsiveness
 The UI is styled with Tailwind CSS. All layouts use utility-first classes and responsive breakpoints (md, lg, etc.).
 
-Key Styling Features
-Responsive Grid:
+- Cards are displayed in a responsive grid (md:grid-cols-2, lg:grid-cols-3)
 
-Skip cards are displayed in a responsive grid (md:grid-cols-2, lg:grid-cols-3).
-Adjusts dynamically based on screen size.
-Sticky Components:
+- Mobile layout uses vertical stacking with centered content
 
-The progress bar and footer are sticky, ensuring they remain visible during scrolling.
-Dynamic Badge Styling:
+- Footer and progress components are sticky on mobile and desktop
 
-The "Yard" badge changes color when a skip card is selected, providing visual feedback to the user.
+- Gaps and padding adapt based on screen size (gap-4, px-6, pb-40)
 
 ## 🧩 Shadcn UI
 The design system uses Shadcn UI components for styling consistency and accessibility.
 
 Common components used:
 
-Button, with support for variants like secondary or outline
+- Button, with support for variants 
 
-Tooltip for hover messages
+- Tooltip for hover messages
 
-Badge, when needed for labels
+- Badge, when needed for labels
 
 Accessibility helpers like cursor-not-allowed, focus-visible:ring, and disabled:opacity-50 are applied through Tailwind and Shadcn utilities.
 
 ## ♿ Accessibility
-Keyboard Navigation:
+- Buttons are keyboard accessible and include visible focus states
 
-Skip cards are fully keyboard accessible, with tabIndex and onKeyDown handlers for Enter and Space keys.
-Buttons include visible focus states for better usability.
-Interactive Areas:
+- Interactive areas use stopPropagation and ref guards for clean behavior
 
-Click-outside behavior is implemented using useRef and the useClickOutside hook to handle interactions cleanly.
-Icons and Images:
+- Icons are either decorative or wrapped in accessible components
 
-Icons are either decorative or wrapped in accessible components.
-Images use next/image for lazy loading and optimized sizes.
-Responsive Layout:
-
-The layout avoids overflow or truncation on smaller screens, ensuring a smooth experience across devices.
+- Layout avoids overflow or truncation on smaller screens
 
 ## ⚡ Performance
-Client-Side Data Fetching:
+- Data is fetched client-side with fetch() from a real endpoint
 
-Data is fetched client-side using the fetchSkipsByLocation function.
-Skeleton loaders are displayed while data is being fetched to improve perceived performance.
-Optimized Images:
+- State is kept local to avoid unnecessary global updates
 
-Images use next/image with lazy loading and optimized sizes for better performance.
-Minimal Event Listeners:
+- Images use next/image with lazy loading and optimized sizes
 
-Only essential event listeners are active (e.g., for click-outside behavior).
-Local State Management:
-
-State is kept local to avoid unnecessary global updates, improving performance and maintainability.
+- Only essential event listeners are active (e.g. for click-outside behavior)
 
 This setup ensures a responsive and user-friendly experience across both mobile and desktop, while keeping the codebase maintainable and scalable.
 
@@ -126,12 +89,12 @@ This setup ensures a responsive and user-friendly experience across both mobile 
 
 - Moved the "Continue" bar to the footer
 
-- Made a small change to the selection data
-
 - Enabled card selection and deselection when clicking outside a card
 
-- Added a tooltip for the heavy machine alert in desktop view; displayed as a badge in mobile view
+- Added a tooltip for the heavy machine alert and private property in desktop view, displayed as a badge in mobile view
 
 - Changed the Yard badge color when a card is selected
 
-- Introduced skeleton loading for skip cards to improve user experience during data fetching.
+- Skeleton loading at the Card component
+
+- On footer improved selected data display
