@@ -1,12 +1,14 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { ProgressBar } from "../../components/ui/progress-bar";
+import { ProgressBar } from "../../components/common/progress-bar";
 import { SkipCard } from "./components/skip-card";
-import { StickyFooter } from "@/components/ui/footer";
+import { StickyFooter } from "@/components/common/footer";
 import { useClickOutside } from "@/lib/hooks/useClickOutside";
 import { Skip } from "@/types/skip";
 import { generateTags } from "@/lib/utils";
+import TitleWithDescription from "@/components/ui/title-with-description";
+import { fetchSkipsByLocation } from "../api/skips";
 
 const CURRENT_STEP = 3;
 const SKELETON_COUNT = 6;
@@ -25,15 +27,10 @@ export default function SkipSelectionPage() {
         setIsLoading(true);
         setError(null);
 
-        fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/skips/by-location?postcode=NR32&area=Lowestoft`)
-            .then((res) => {
-                if (!res.ok) throw new Error("Failed to fetch skips");
-                return res.json();
-            })
-            .then((data) => {
-                const filtered = data.filter((skip: Skip) => skip.price_before_vat !== null);
-                setSkips(filtered);
-                setSelectedSkip(filtered.length > 0 ? String(filtered[0].id) : null);
+        fetchSkipsByLocation("NR32", "Lowestoft")
+            .then((filteredSkips) => {
+                setSkips(filteredSkips);
+                setSelectedSkip(filteredSkips.length > 0 ? String(filteredSkips[0].id) : null);
             })
             .catch((error) => {
                 console.error("Error fetching skips:", error);
@@ -53,10 +50,9 @@ export default function SkipSelectionPage() {
             <div className="container max-w-6xl mx-auto px-4 py-8 pb-40">
                 <ProgressBar currentStep={CURRENT_STEP} />
 
-                <div className="mt-12 text-center">
-                    <h1 className="text-3xl font-bold text-white md:text-4xl">Choose Your Skip Size</h1>
-                    <p className="mt-3 text-gray-400">Select the skip size that best suits your needs</p>
-                </div>
+                <TitleWithDescription className="mt-12 text-center"
+                    title={"Choose Your Skip Size"}
+                    description={"Select the skip size that best suits your needs"} />
 
                 {error && (
                     <div className="mt-6 text-center text-red-500">

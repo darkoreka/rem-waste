@@ -25,30 +25,55 @@ This project follows a modular, component-driven approach using the App Router i
 ## 🧱 Architecture
 The app uses a feature-based folder structure (e.g. app/skips/components) to group logic, UI, and API behavior by domain.
 
-Skip data is loaded from a dynamic API endpoint (/api/skips), which can be connected to mock or live data sources.
+Key Features
+SkipCard Component:
 
-Component structure is based on clear separation of concerns:
+Renders a single skip option and handles selection.
+Supports a skeleton loading state for better user experience during data fetching.
+Dynamically updates styles based on selection state (e.g., border and shadow changes).
+ProgressSteps Component:
 
-SkipCard renders a single skip option and handles selection
+Displays the current progress and is fixed to the top of the page for better navigation.
+StickyFooter Component:
 
-ProgressSteps shows the current progress and is fixed to the top
+Displays context-based actions (e.g., selected skip size and price) and is fixed to the bottom of the page.
+TitleWithDescription Component:
 
-Footer displays context-based actions and is fixed to the bottom
+Separates the title and description into a reusable component for better readability and maintainability.
+Used to display the page title ("Choose Your Skip Size") and a brief description.
+Custom Hook
+useClickOutside:
+A custom hook that detects clicks outside of specified elements.
+Used to deselect a skip card when the user clicks outside the card or footer.
+Keeps global interaction logic clean and isolated by leveraging useRef.
+TypeScript Types
+Skip Type:
+
+Defines the structure of a skip object fetched from the API.
+Ensures type safety and consistency across the app.
 
 The code follows SOLID principles, keeping components small, composable, and easy to extend.
 
-Click-outside behavior is implemented using useRef and forwardRef to keep global interaction logic clean and isolated.
+API Integration
+Fetching Skip Data:
+
+Skip data is fetched from a dynamic API endpoint (/api/skips) using a dedicated function in the api folder.
+The fetchSkipsByLocation function handles the API call and filters out invalid data (e.g., skips with null prices).
 
 ## 🎨 Styling & Responsiveness
 The UI is styled with Tailwind CSS. All layouts use utility-first classes and responsive breakpoints (md, lg, etc.).
 
-Cards are displayed in a responsive grid (md:grid-cols-2, lg:grid-cols-3)
+Key Styling Features
+Responsive Grid:
 
-Mobile layout uses vertical stacking with centered content
+Skip cards are displayed in a responsive grid (md:grid-cols-2, lg:grid-cols-3).
+Adjusts dynamically based on screen size.
+Sticky Components:
 
-Footer and progress components are sticky on mobile and desktop
+The progress bar and footer are sticky, ensuring they remain visible during scrolling.
+Dynamic Badge Styling:
 
-Gaps and padding adapt based on screen size (gap-4, px-6, pb-40)
+The "Yard" badge changes color when a skip card is selected, providing visual feedback to the user.
 
 ## 🧩 Shadcn UI
 The design system uses Shadcn UI components for styling consistency and accessibility.
@@ -64,22 +89,35 @@ Badge, when needed for labels
 Accessibility helpers like cursor-not-allowed, focus-visible:ring, and disabled:opacity-50 are applied through Tailwind and Shadcn utilities.
 
 ## ♿ Accessibility
-Buttons are keyboard accessible and include visible focus states
+Keyboard Navigation:
 
-Interactive areas use stopPropagation and ref guards for clean behavior
+Skip cards are fully keyboard accessible, with tabIndex and onKeyDown handlers for Enter and Space keys.
+Buttons include visible focus states for better usability.
+Interactive Areas:
 
-Icons are either decorative or wrapped in accessible components
+Click-outside behavior is implemented using useRef and the useClickOutside hook to handle interactions cleanly.
+Icons and Images:
 
-Layout avoids overflow or truncation on smaller screens
+Icons are either decorative or wrapped in accessible components.
+Images use next/image for lazy loading and optimized sizes.
+Responsive Layout:
+
+The layout avoids overflow or truncation on smaller screens, ensuring a smooth experience across devices.
 
 ## ⚡ Performance
-Data is fetched client-side with fetch() from a real endpoint
+Client-Side Data Fetching:
 
-State is kept local to avoid unnecessary global updates
+Data is fetched client-side using the fetchSkipsByLocation function.
+Skeleton loaders are displayed while data is being fetched to improve perceived performance.
+Optimized Images:
 
-Images use next/image with lazy loading and optimized sizes
+Images use next/image with lazy loading and optimized sizes for better performance.
+Minimal Event Listeners:
 
-Only essential event listeners are active (e.g. for click-outside behavior)
+Only essential event listeners are active (e.g., for click-outside behavior).
+Local State Management:
+
+State is kept local to avoid unnecessary global updates, improving performance and maintainability.
 
 This setup ensures a responsive and user-friendly experience across both mobile and desktop, while keeping the codebase maintainable and scalable.
 
@@ -95,3 +133,5 @@ This setup ensures a responsive and user-friendly experience across both mobile 
 - Added a tooltip for the heavy machine alert in desktop view; displayed as a badge in mobile view
 
 - Changed the Yard badge color when a card is selected
+
+- Introduced skeleton loading for skip cards to improve user experience during data fetching.
