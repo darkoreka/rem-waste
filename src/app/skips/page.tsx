@@ -4,28 +4,27 @@ import { useEffect, useRef, useState } from "react";
 import { ProgressBar } from "../../components/ui/progress-bar";
 import { SkipCard } from "./components/skip-card";
 import { StickyFooter } from "@/components/ui/footer";
-
-interface Skip {
-    id: number;
-    size: number;
-    price_before_vat: number | null;
-    vat: number;
-    hire_period_days: number;
-    allowed_on_road: boolean;
-    allows_heavy_waste: boolean;
-}
+import { useClickOutside } from "@/lib/hooks/useClickOutside";
+import { Skip } from "@/types/skip";
+import { generateTags } from "@/lib/utils";
 
 const CURRENT_STEP = 3;
+const SKELETON_COUNT = 6;
 
 export default function SkipSelectionPage() {
     const [skips, setSkips] = useState<Skip[]>([]);
     const [selectedSkip, setSelectedSkip] = useState<string | null>(null);
     const [isLoading, setIsLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
     const cardWrapperRef = useRef<HTMLDivElement | null>(null);
     const footerRef = useRef<HTMLDivElement | null>(null);
 
+    useClickOutside([cardWrapperRef, footerRef], () => setSelectedSkip(null));
+
     useEffect(() => {
         setIsLoading(true);
+        setError(null);
+
         fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/skips/by-location?postcode=NR32&area=Lowestoft`)
             .then((res) => {
                 if (!res.ok) throw new Error("Failed to fetch skips");
@@ -36,30 +35,12 @@ export default function SkipSelectionPage() {
                 setSkips(filtered);
                 setSelectedSkip(filtered.length > 0 ? String(filtered[0].id) : null);
             })
-            .catch((error) => console.error("Error fetching skips:", error))
+            .catch((error) => {
+                console.error("Error fetching skips:", error);
+                setError("Failed to load skips. Please try again later.");
+            })
             .finally(() => setIsLoading(false));
     }, []);
-
-    useEffect(() => {
-        const handleClickOutside = (e: MouseEvent) => {
-            const target = e.target as Node;
-            if (
-                cardWrapperRef.current &&
-                footerRef.current &&
-                !cardWrapperRef.current.contains(target) &&
-                !footerRef.current.contains(target)
-            ) {
-                setSelectedSkip(null);
-            }
-        };
-
-        document.addEventListener("mousedown", handleClickOutside);
-        return () => document.removeEventListener("mousedown", handleClickOutside);
-    }, []);
-
-    if (isLoading) {
-        return <div>Loading...</div>;
-    }
 
     const selected = skips.find((s) => String(s.id) === selectedSkip);
     const selectedSize = selected?.size ? `${selected.size} Yard` : "-";
@@ -77,35 +58,36 @@ export default function SkipSelectionPage() {
                     <p className="mt-3 text-gray-400">Select the skip size that best suits your needs</p>
                 </div>
 
+                {error && (
+                    <div className="mt-6 text-center text-red-500">
+                        {error}
+                    </div>
+                )}
+
                 <div
                     ref={cardWrapperRef}
                     className="mt-10 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3"
                 >
-                    {skips.map((skip) => {
-                        const id = String(skip.id);
-                        const size = `${skip.size} Yard`;
-                        const price = skip.price_before_vat
-                            ? `£${(skip.price_before_vat * (1 + skip.vat / 100)).toFixed(2)}`
-                            : "N/A";
-                        const period = `${skip.hire_period_days} day hire`;
-
-                        const tags: string[] = [];
-                        if (!skip.allowed_on_road) tags.push("Private Property Only");
-                        if (!skip.allows_heavy_waste) tags.push("Not Suitable for Heavy Waste");
-
-                        return (
+                    {isLoading
+                        ? Array.from({ length: SKELETON_COUNT }).map((_, index) => (
+                            <SkipCard key={index} isLoading />
+                        ))
+                        : skips.map((skip) => (
                             <SkipCard
-                                key={id}
-                                id={id}
-                                size={size}
-                                price={price}
-                                period={period}
-                                isSelected={selectedSkip === id}
-                                onSelect={() => setSelectedSkip(id)}
-                                tags={tags}
+                                key={skip.id}
+                                id={String(skip.id)}
+                                size={`${skip.size} Yard`}
+                                price={
+                                    skip.price_before_vat
+                                        ? `£${(skip.price_before_vat * (1 + skip.vat / 100)).toFixed(2)}`
+                                        : "N/A"
+                                }
+                                period={`${skip.hire_period_days} day hire`}
+                                isSelected={selectedSkip === String(skip.id)}
+                                onSelect={() => setSelectedSkip(String(skip.id))}
+                                tags={generateTags(skip)}
                             />
-                        );
-                    })}
+                        ))}
                 </div>
             </div>
 

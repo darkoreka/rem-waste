@@ -2,10 +2,11 @@ import Image from "next/image";
 import { cn } from "@/lib/utils";
 import SelectSkipButton from "./skip-size-button";
 import { Badge } from "@/components/ui/badge";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/tooltip";
-import { AlertTriangle } from "lucide-react";
+import { SkipCardSkeleton } from "./skip-card-skeleton";
+import { Tags } from "./tags";
 
-interface SkipCardProps {
+interface SkipCardBaseProps {
+    isLoading?: false;
     id: string;
     size: string;
     price: string;
@@ -15,23 +16,47 @@ interface SkipCardProps {
     tags?: string[];
 }
 
-export function SkipCard({ size, price, period, isSelected, onSelect, tags }: SkipCardProps) {
+interface SkipCardLoadingProps {
+    isLoading: true;
+}
+
+type SkipCardProps = SkipCardBaseProps | SkipCardLoadingProps;
+
+const IMAGE_PATH = process.env.NEXT_PUBLIC_IMAGE_PATH || "/images/default.jpg";
+
+export function SkipCard(props: SkipCardProps) {
+    if (props.isLoading) {
+        return <SkipCardSkeleton />;
+    }
+
+    const { size, price, period, isSelected, onSelect, tags = [] } = props;
+
+    const cardClasses = cn(
+        "rounded-xl overflow-hidden transition-all duration-200 bg-gray-900 cursor-pointer",
+        isSelected
+            ? "border-2 border-blue-500 shadow-lg shadow-blue-900/20 transform scale-[1.02]"
+            : "border border-gray-800 hover:border-blue-800 hover:shadow"
+    );
+
     return (
         <div
-            className={cn(
-                "rounded-xl overflow-hidden transition-all duration-200 bg-gray-900 cursor-pointer",
-                isSelected
-                    ? "border-2 border-blue-500 shadow-lg shadow-blue-900/20 transform scale-[1.02]"
-                    : "border border-gray-800 hover:border-blue-800 hover:shadow"
-            )}
+            className={cardClasses}
+            role="button"
+            tabIndex={0}
             onClick={(e) => {
                 e.stopPropagation();
                 onSelect();
             }}
+            onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault();
+                    onSelect();
+                }
+            }}
         >
             <div className="relative">
                 <Image
-                    src="/images/rem_waste.jpg"
+                    src={IMAGE_PATH}
                     width={400}
                     height={200}
                     alt={`${size} Skip`}
@@ -46,41 +71,7 @@ export function SkipCard({ size, price, period, isSelected, onSelect, tags }: Sk
                 >
                     {size}
                 </Badge>
-                {tags && tags.length > 0 && (
-                    <>
-                        <div className="hidden md:block">
-                            <TooltipProvider>
-                                <Tooltip>
-                                    <TooltipTrigger asChild>
-                                        <div className="absolute bottom-3 left-3 text-yellow-400 hover:text-yellow-300 cursor-help">
-                                            <AlertTriangle className="h-6 w-6" />
-                                        </div>
-                                    </TooltipTrigger>
-                                    <TooltipContent
-                                        side="top"
-                                        className="flex flex-col gap-2 bg-black text-yellow-400 font-semibold px-3 py-2 rounded-md shadow-md border border-zinc-800"
-                                    >
-                                        {tags.map((tag, index) => (
-                                            <div key={index} className="flex items-center gap-2">
-                                                <AlertTriangle className="h-4 w-4 shrink-0" />
-                                                <span>{tag}</span>
-                                            </div>
-                                        ))}
-                                    </TooltipContent>
-                                </Tooltip>
-                            </TooltipProvider>
-                        </div>
-
-                        <div className="block md:hidden absolute bottom-3 left-3 text-yellow-400 text-sm font-medium space-y-1">
-                            {tags.map((tag, index) => (
-                                <div key={index} className="flex items-center gap-2 bg-neutral-950 p-1 rounded-md">
-                                    <AlertTriangle className="h-4 w-4 shrink-0" />
-                                    <span>{tag}</span>
-                                </div>
-                            ))}
-                        </div>
-                    </>
-                )}
+                <Tags tags={tags} />
             </div>
 
             <div className="p-5">
@@ -97,6 +88,6 @@ export function SkipCard({ size, price, period, isSelected, onSelect, tags }: Sk
 
                 <SelectSkipButton isSelected={isSelected} onSelect={onSelect} />
             </div>
-        </div >
+        </div>
     );
 }
